@@ -1,35 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
-function App() {
-  const [count, setCount] = useState(0)
+import routes from "./routes";
+import { renderRoutes } from "./routeUtils";
+import LandingPages from "./pages/LandingPages";
+import theme from "./assets/theme";
+
+
+const App = () => {
+  const { pathname } = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+  }, [pathname]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <ThemeProvider theme={ theme }>
+      <CssBaseline />
+      <Routes>
+        {renderRoutes(routes)}
+        <Route path="*" element={<Navigate to="/CBOM" />} />
+        <Route path="/CBOM" element={<LandingPages />} />
+        <Route path="/BeSLighthouse/Project-Of-Interest/bes_version_history/:CbomId/:CbomName" element={ <BesVersionHistory /> } />
+      </Routes>
+    </ThemeProvider>
+  );
+};
 
-export default App
+export default App;
